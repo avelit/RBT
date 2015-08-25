@@ -11,12 +11,12 @@ public class SimpleRBTTest {
         RBT rbt = new RBT();
         rbt.put(1,1);
         rbt.put(2,2);
-        rbt.remove(1);
+        rbt.remove(2);
         Comparable expected = null;
-        Comparable actual = rbt.get(1);
+        Comparable actual = rbt.get(2);
         assertEquals(expected,actual);
-        expected = 2;
-        actual = rbt.get(2);
+        expected = 1;
+        actual = rbt.get(1);
         assertEquals(expected,actual);
     }
 }

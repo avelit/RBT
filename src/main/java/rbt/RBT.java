@@ -115,7 +115,7 @@ public class RBT {
     public Node remove(Comparable key) {
         Node h = getNode(key);
         if (h == null) return null;
-        Node max = getMax(h.right);
+        Node max = getMax(h.left);
         if (max == null) {
             return remove(h);
         }
@@ -128,7 +128,8 @@ public class RBT {
     private Node remove(Node h) {
         if (h == null) return null;
         if (h == root) {
-            //TODO: do it
+            root = h.right;
+            return h;
         }
         Node parent = findParent(h);
         parent.left = h.right;
