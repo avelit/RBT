@@ -112,27 +112,31 @@ public class RBT {
         return max;
     }
 
-    public Node delete(Comparable key) {
+    public Node remove(Comparable key) {
         Node h = getNode(key);
         if (h == null) return null;
         Node max = getMax(h.right);
         if (max == null) {
-            return delete(h);
+            return remove(h);
         }
         h.key = max.key;
         h.value = max.value;
         h.color = BLACK;
-        return delete(max);
+        return remove(max);
     }
 
-    private Node delete(Node h) {
+    private Node remove(Node h) {
         if (h == null) return null;
         if (h == root) {
             //TODO: do it
         }
         Node parent = findParent(h);
         parent.left = h.right;
-        return null;
+        reBalance();
+        return h;
+    }
+
+    private void reBalance() {
     }
 
     private Node findParent(Node h) {

@@ -11,7 +11,7 @@ public class SimpleRBTTest {
         RBT rbt = new RBT();
         rbt.put(1,1);
         rbt.put(2,2);
-        rbt.delete(1);
+        rbt.remove(1);
         Comparable expected = null;
         Comparable actual = rbt.get(1);
         assertEquals(expected,actual);
