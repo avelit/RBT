@@ -96,7 +96,9 @@ public class RBT {
         if (cmp < 0) h.left = put(h.left, key, val);
         else if (cmp > 0) h.right = put(h.right, key, val);
         else if (cmp == 0) h.value = val;
-        reBalance(h);
+        if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h);
+        if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
+        if (isRed(h.left) && isRed(h.right)) flipColors(h);
         return h;
     }
 
@@ -114,33 +116,34 @@ public class RBT {
         if (h == null) return null;
         Node max = getMax(h.left);
         if (max == null) {
-            return remove(h);
+            return remove(h, findParent(h));
         }
+        Node parent = findParent(max); 
         h.key = max.key;
         h.value = max.value;
         if (max.color == BLACK) {
             h.color = h.color == BLACK ? RED : BLACK;
         }
-        remove(max);
-        reBalance(h);
+        remove(max, parent);
         return max;
     }
 
-    private Node remove(Node h) {
+    private Node remove(Node h, Node parent) {
+        //TODO: rebalance
         if (h == null) return null;
         if (h == root) {
             root = h.right;
             return h;
         }
-        Node parent = findParent(h);
-        parent.left = h.right;
+        if (parent.left == h) {
+            parent.left = h.left;
+        } else {
+            parent.right = h.left;
+        }
         return h;
     }
 
     private void reBalance(Node h) {
-        if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h);
-        if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
-        if (isRed(h.left) && isRed(h.right)) flipColors(h);
     }
 
     private Node findParent(Node h) {

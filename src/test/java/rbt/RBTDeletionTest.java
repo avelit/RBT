@@ -10,7 +10,7 @@ import java.util.Collection;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class RBTTest {
+public class RBTDeletionTest {
 
     private int size;
 
@@ -21,7 +21,7 @@ public class RBTTest {
         });
     }
 
-    public RBTTest(int size) {
+    public RBTDeletionTest(int size) {
         this.size = size;
     }
 
@@ -41,10 +41,14 @@ public class RBTTest {
                 .append(size * 2)
                 .append(")\t");
         for (Integer i = size; i >= 0; i--) {
+            msg.append("remove(")
+                    .append(i)
+                    .append("), ");
             msg.append("get(")
                     .append(i)
                     .append("), ");
-            assertEquals(msg.toString(), (Integer)(2 * i), (Integer)rbt.get(i));
+            rbt.remove(i);
+            assertEquals(msg.toString(), null, (Integer)rbt.get(i));
         }
     }
 }
