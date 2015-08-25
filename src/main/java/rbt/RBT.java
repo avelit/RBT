@@ -6,18 +6,19 @@ public class RBT {
     private static final COLOR BLACK = COLOR.BLACK;
     public Node root;
 
-    private class Node<Key,Value> {
-        Key key;
+    private class Node<Value> {
+        Comparable key;
         Value value;
         Node left, right;
         COLOR color; // color of parent link
 
-        public Node (Key key, Value value, COLOR color) {
+        public Node(Comparable key, Value value, COLOR color) {
             this.key = key;
             this.value = value;
             this.color = color;
         }
     }
+
 
     private boolean isRed(Node x) {
         if (x == null) return false;
@@ -31,7 +32,7 @@ public class RBT {
         x.left = h;
         x.color = h.color;
         h.color = RED;
-        changeRoot(h,x);
+        changeRoot(h, x);
         return x;
     }
 
@@ -42,7 +43,7 @@ public class RBT {
         x.right = h;
         x.color = h.color;
         h.color = RED;
-        changeRoot(h,x);
+        changeRoot(h, x);
         return x;
     }
 
@@ -62,10 +63,10 @@ public class RBT {
         h.right.color = BLACK;
     }
 
-    public <Key,Value> Value get(Key key) {
+    public <Value> Value get(Comparable key) {
         Node x = root;
         while (x != null) {
-            int cmp = ((Comparable)key).compareTo(x.key);
+            int cmp = key.compareTo(x.key);
             if (cmp < 0) x = x.left;
             else if (cmp > 0) x = x.right;
             else if (cmp == 0) return (Value) x.value;
@@ -73,15 +74,26 @@ public class RBT {
         return null;
     }
 
-    public  <Key,Value> Node put(Key key, Value val) {
+    private  Node getNode(Comparable key) {
+        Node x = root;
+        while (x != null) {
+            int cmp = key.compareTo(x.key);
+            if (cmp < 0) x = x.left;
+            else if (cmp > 0) x = x.right;
+            else if (cmp == 0) return x;
+        }
+        return null;
+    }
+
+    public <Value> Node put(Comparable key, Value val) {
         Node node = put(root, key, val);
         if (root == null) root = node;
         return node;
     }
 
-     private  <Key,Value> Node put(Node h, Key key, Value val) {
+    private <Value> Node put(Node h, Comparable key, Value val) {
         if (h == null) return new Node(key, val, RED);
-        int cmp = ((Comparable)key).compareTo(h.key);
+        int cmp = key.compareTo(h.key);
         if (cmp < 0) h.left = put(h.left, key, val);
         else if (cmp > 0) h.right = put(h.right, key, val);
         else if (cmp == 0) h.value = val;
@@ -89,5 +101,57 @@ public class RBT {
         if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
         if (isRed(h.left) && isRed(h.right)) flipColors(h);
         return h;
+    }
+
+    public Node getMax(Node h) {
+        if (h == null) return null;
+        Node max = h;
+        while (max.right != null) {
+            max = max.right;
+        }
+        return max;
+    }
+
+    public Node delete(Comparable key) {
+        Node h = getNode(key);
+        if (h == null) return null;
+        Node max = getMax(h.right);
+        if (max == null) {
+            return delete(h);
+        }
+        h.key = max.key;
+        h.value = max.value;
+        h.color = BLACK;
+        return delete(max);
+    }
+
+    private Node delete(Node h) {
+        if (h == null) return null;
+        if (h == root) {
+            //TODO: do it
+        }
+        Node parent = findParent(h);
+        parent.left = h.right;
+        return null;
+    }
+
+    private Node findParent(Node h) {
+        if (h == null) return null;
+        Node x = root;
+        Node parent = root;
+        Comparable key = h.key;
+        while (x != null) {
+            int cmp = key.compareTo(x.key);
+            if (cmp < 0) {
+                parent = x;
+                x = x.left;
+            }
+            else if (cmp > 0) {
+                parent = x;
+                x = x.right;
+            }
+            else if (cmp == 0) return parent;
+        }
+        return null;
     }
 }
